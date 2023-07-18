@@ -1,10 +1,29 @@
+import io
 import sqlite3
 from typing import List, Tuple, Any
+
+import numpy as np
+
+
+def adapt_array(arr):
+    """
+    http://stackoverflow.com/a/31312102/190597
+    """
+    out = io.BytesIO()
+    np.save(out, arr)  # noqa
+    out.seek(0)
+    return sqlite3.Binary(out.read())
+
+
+def convert_array(text):
+    out = io.BytesIO(text)
+    out.seek(0)
+    return np.load(out)  # noqa
 
 
 class VectorDB:
     def __init__(self, database: str = ":memory:"):
-        self.conn = sqlite3.connect(database)
+        self.conn = sqlite3.connect(database, detect_types=sqlite3.PARSE_DECLTYPES)
         self.cur = self.conn.cursor()
 
     def create_table(self, table_name: str, columns: List[Tuple[str, str]]):
