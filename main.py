@@ -16,12 +16,22 @@ def adapt_array(arr):
 
 
 def convert_array(text):
+    """
+    https://stackoverflow.com/a/18622264
+    """
     out = io.BytesIO(text)
     out.seek(0)
     return np.load(out)  # noqa
 
 
-class VectorDB:
+# Converts np.array to TEXT when inserting
+sqlite3.register_adapter(np.ndarray, adapt_array)
+
+# Converts TEXT to np.array when selecting
+sqlite3.register_converter("array", convert_array)
+
+
+class SQLiteDB:
     def __init__(self, database: str = ":memory:"):
         self.conn = sqlite3.connect(database, detect_types=sqlite3.PARSE_DECLTYPES)
         self.cur = self.conn.cursor()
@@ -50,7 +60,9 @@ class VectorDB:
 
         For example, [(1, "Alice"), (2, "Bob")]
         """
-        placeholders = ", ".join(["?"] * len(data[0]))  # Create placeholders for each value
+        placeholders = ", ".join(
+            ["?"] * len(data[0])
+        )  # Create placeholders for each value
         sql = f"INSERT INTO {table_name} VALUES {placeholders}"
         self.cur.executemany(sql, data)
         self.conn.commit()
