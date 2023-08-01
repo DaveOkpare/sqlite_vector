@@ -24,6 +24,38 @@ def convert_array(text):
     return np.load(out)  # noqa
 
 
+def euclidean_distance(point1, point2):
+    """
+    Calculate the Euclidean distance between two points represented as NumPy arrays.
+    """
+    if point1.shape != point2.shape:
+        raise ValueError("Input points must have the same shape.")
+
+    # Calculate the Euclidean distance
+    distance = np.linalg.norm(point1 - point2)
+
+    return distance
+
+
+def get_nearest_neighbor(train, test_row, num_neighbors: int = 1):
+    """
+    Find the nearest neighbors of a test data point in a dataset.
+    """
+    distances = []
+
+    for train_row in train:
+        dist = euclidean_distance(test_row, train_row)
+        distances.append((train_row, dist))
+
+    distances.sort(key=lambda tup: tup[1])
+    neighbors = []
+
+    for i in range(num_neighbors):
+        neighbors.append(distances[i][0])
+
+    return neighbors
+
+
 # Converts np.array to TEXT when inserting
 sqlite3.register_adapter(np.ndarray, adapt_array)
 
@@ -36,7 +68,7 @@ class SQLiteDB:
         self.conn = sqlite3.connect(database, detect_types=sqlite3.PARSE_DECLTYPES)
         self.cur = self.conn.cursor()
 
-    def create_table(self, table_name: str, columns: List[Tuple[str, str]]):
+    def _create_table(self, table_name: str, columns: List[Tuple[str, str]]):
         """
         Create a table with the given name and columns
 
@@ -52,7 +84,7 @@ class SQLiteDB:
         self.cur.execute(sql)
         self.conn.commit()
 
-    def insert_data(self, table_name: str, data: List[Tuple[Any]]):
+    def _insert_data(self, table_name: str, data: List[Tuple[Any]]):
         """
         Insert data into the table
 
@@ -67,7 +99,7 @@ class SQLiteDB:
         self.cur.executemany(sql, data)
         self.conn.commit()
 
-    def query_data(self, table_name: str, condition: str = None) -> List[Tuple]:
+    def _query_data(self, table_name: str, condition: str = None) -> List[Tuple]:
         """
         Query data from the table
 
@@ -81,8 +113,39 @@ class SQLiteDB:
         self.cur.execute(sql)
         return self.cur.fetchall()  # Return a list of tuples with the query results
 
-    def close(self):
+    def _close(self):
         """
         Create placeholders for each value
         """
         self.conn.close()
+
+
+class VectorDB(SQLiteDB):
+    def __init__(self, collection_name: str):
+        """
+        Initialize a VectorDB instance for storing and querying vectors.
+        """
+        super().__init__()
+        self.collection_name = collection_name
+
+    def create(self):
+        """
+        Create the collection (table) for storing vectors with the name specified during initialization.
+        """
+        columns = [("arr", "array")]
+        self._create_table(self.collection_name, columns)
+
+    def insert(self, vectors: List[np.array]):
+        """
+        Insert a list of vectors (NumPy arrays) into the collection.
+        """
+        _vectors = [(vector,) for vector in vectors]
+        self._insert_data(self.collection_name, _vectors)
+
+    def search(self, query: np.array, num_results: int):
+        """
+        Find the nearest neighbors of a query vector in the collection.
+        """
+        vectors = self._query_data(self.collection_name)
+        vectors = [vector[0] for vector in vectors]
+        return get_nearest_neighbor(vectors, query, num_results)
