@@ -24,6 +24,32 @@ def convert_array(text):
     return np.load(out)  # noqa
 
 
+def euclidean_distance(point1, point2):
+    if point1.shape != point2.shape:
+        raise ValueError("Input points must have the same shape.")
+
+    # Calculate the Euclidean distance
+    distance = np.linalg.norm(point1 - point2)
+
+    return distance
+
+
+def get_nearest_neighbor(train, test_row, num_neighbors: int = 1):
+    distances = []
+
+    for train_row in train:
+        dist = euclidean_distance(test_row, train_row)
+        distances.append((train_row, dist))
+
+    distances.sort(key=lambda tup: tup[1])
+    neighbors = []
+
+    for i in range(num_neighbors):
+        neighbors.append(distances[i][0])
+
+    return neighbors
+
+
 # Converts np.array to TEXT when inserting
 sqlite3.register_adapter(np.ndarray, adapt_array)
 
