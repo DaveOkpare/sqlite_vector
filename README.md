@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-  <h2>Vector<sub>um</sub>B</h2>
+  <h2>VectorD<sub>um</sub>B</h2>
   <h4>Store and Query Vectors in SQLite</h4>
 </div>
 
