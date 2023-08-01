@@ -36,7 +36,7 @@ class SQLiteDB:
         self.conn = sqlite3.connect(database, detect_types=sqlite3.PARSE_DECLTYPES)
         self.cur = self.conn.cursor()
 
-    def create_table(self, table_name: str, columns: List[Tuple[str, str]]):
+    def _create_table(self, table_name: str, columns: List[Tuple[str, str]]):
         """
         Create a table with the given name and columns
 
@@ -52,7 +52,7 @@ class SQLiteDB:
         self.cur.execute(sql)
         self.conn.commit()
 
-    def insert_data(self, table_name: str, data: List[Tuple[Any]]):
+    def _insert_data(self, table_name: str, data: List[Tuple[Any]]):
         """
         Insert data into the table
 
@@ -67,7 +67,7 @@ class SQLiteDB:
         self.cur.executemany(sql, data)
         self.conn.commit()
 
-    def query_data(self, table_name: str, condition: str = None) -> List[Tuple]:
+    def _query_data(self, table_name: str, condition: str = None) -> List[Tuple]:
         """
         Query data from the table
 
@@ -81,7 +81,7 @@ class SQLiteDB:
         self.cur.execute(sql)
         return self.cur.fetchall()  # Return a list of tuples with the query results
 
-    def close(self):
+    def _close(self):
         """
         Create placeholders for each value
         """
