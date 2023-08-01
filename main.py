@@ -63,7 +63,7 @@ class SQLiteDB:
         placeholders = ", ".join(
             ["?"] * len(data[0])
         )  # Create placeholders for each value
-        sql = f"INSERT INTO {table_name} VALUES {placeholders}"
+        sql = f"INSERT INTO {table_name} VALUES ({placeholders})"
         self.cur.executemany(sql, data)
         self.conn.commit()
 
