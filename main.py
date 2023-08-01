@@ -25,6 +25,9 @@ def convert_array(text):
 
 
 def euclidean_distance(point1, point2):
+    """
+    Calculate the Euclidean distance between two points represented as NumPy arrays.
+    """
     if point1.shape != point2.shape:
         raise ValueError("Input points must have the same shape.")
 
@@ -35,6 +38,9 @@ def euclidean_distance(point1, point2):
 
 
 def get_nearest_neighbor(train, test_row, num_neighbors: int = 1):
+    """
+    Find the nearest neighbors of a test data point in a dataset.
+    """
     distances = []
 
     for train_row in train:
@@ -116,18 +122,30 @@ class SQLiteDB:
 
 class VectorDB(SQLiteDB):
     def __init__(self, collection_name: str):
+        """
+        Initialize a VectorDB instance for storing and querying vectors.
+        """
         super().__init__()
         self.collection_name = collection_name
 
     def create(self):
+        """
+        Create the collection (table) for storing vectors with the name specified during initialization.
+        """
         columns = [("arr", "array")]
         self._create_table(self.collection_name, columns)
 
     def insert(self, vectors: List[np.array]):
+        """
+        Insert a list of vectors (NumPy arrays) into the collection.
+        """
         _vectors = [(vector,) for vector in vectors]
         self._insert_data(self.collection_name, _vectors)
 
     def search(self, query: np.array, num_results: int):
+        """
+        Find the nearest neighbors of a query vector in the collection.
+        """
         vectors = self._query_data(self.collection_name)
         vectors = [vector[0] for vector in vectors]
         return get_nearest_neighbor(vectors, query, num_results)
