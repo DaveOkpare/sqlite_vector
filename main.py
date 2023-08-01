@@ -112,3 +112,22 @@ class SQLiteDB:
         Create placeholders for each value
         """
         self.conn.close()
+
+
+class VectorDB(SQLiteDB):
+    def __init__(self, collection_name: str):
+        super().__init__()
+        self.collection_name = collection_name
+
+    def create(self):
+        columns = [("arr", "array")]
+        self._create_table(self.collection_name, columns)
+
+    def insert(self, vectors: List[np.array]):
+        _vectors = [(vector,) for vector in vectors]
+        self._insert_data(self.collection_name, _vectors)
+
+    def search(self, query: np.array, num_results: int):
+        vectors = self._query_data(self.collection_name)
+        vectors = [vector[0] for vector in vectors]
+        return get_nearest_neighbor(vectors, query, num_results)
