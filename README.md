@@ -1,6 +1,7 @@
-<h2> VectorD<sub>um</sub>B </h2>
-
-<h4>Store and Query Vectors in SQLite</h4>
+<div style="text-align: center;">
+  <h2>Vector<sub>um</sub>B</h2>
+  <h4>Store and Query Vectors in SQLite</h4>
+</div>
 
 <p>
 VectorD<sub>um</sub>B is a Python script that provides a simple way to store and query vectors in an SQLite database. It leverages the power of NumPy for vector manipulation and SQLite for efficient storage and retrieval of data.
