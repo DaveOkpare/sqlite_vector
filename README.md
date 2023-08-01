@@ -1,9 +1,9 @@
-<h2> VectorD<sup>um</sup>B </h2>
+<h2> VectorD<sub>um</sub>B </h2>
 
 <h4>Store and Query Vectors in SQLite</h4>
 
 <p>
-VectorD<sup>um</sup>B is a Python script that provides a simple way to store and query vectors in an SQLite database. It leverages the power of NumPy for vector manipulation and SQLite for efficient storage and retrieval of data.
+VectorD<sub>um</sub>B is a Python script that provides a simple way to store and query vectors in an SQLite database. It leverages the power of NumPy for vector manipulation and SQLite for efficient storage and retrieval of data.
 </p>
 
 <h3>Features</h3>
@@ -14,7 +14,7 @@ VectorD<sup>um</sup>B is a Python script that provides a simple way to store and
 
 <h3>Prerequisites</h3>
 
-To use VectorD<sup>um</sup>B, you need to have the following installed on your system:
+To use VectorD<sub>um</sub>B, you need to have the following installed on your system:
 
 1. Python (>=3.6)
 2. NumPy (>=1.19)
