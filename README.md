@@ -7,6 +7,10 @@
 VectorD<sub>um</sub>B is a Python script that provides a simple way to store and query vectors in an SQLite database. It leverages the power of NumPy for vector manipulation and SQLite for efficient storage and retrieval of data.
 </p>
 
+<b>SQLite does not support arrays. This script extends SQLite to support Numpy Arrays and provides a retrieval method using KNNs.</b>
+
+<em>This code is not intended for production-use. Please explore <a href="https://www.google.com/search?q=list+of+vector+databases">other vector databases.</a></em>
+
 <h3>Features</h3>
 
 <li>Efficient storage of vectors as NumPy arrays in an SQLite database.</li>
@@ -45,6 +49,7 @@ pip install -r requirements.txt
 pip install numpy
 ```
 
+
 ```python3
 # Import the necessary modules in your Python script:
 from vector import VectorDB
@@ -79,4 +84,4 @@ Results: [0 1 2 3 4 5 6 7 8 9]
 
 Feel free to explore and adapt the provided example to suit your needs! For more details, check out the source code in the repository.
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE)
